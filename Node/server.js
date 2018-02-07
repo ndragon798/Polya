@@ -55,10 +55,6 @@ function handleRequest(req, res) {
 var dict = {};
 var b = 1;
 var e = 1001;
-//var even = 0;
-//var odd = 0;
-// WebSocket Portion
-// WebSockets work with the HTTP server
 
 var io = require('socket.io').listen(server);
 //io.set('origins', 'http://f355bce2.ngrok.io:*');
@@ -99,28 +95,30 @@ io.sockets.on('connection',
                     dict[key] = data.a[key];
                 }
             }
-            var datan = {
-                u: data.u,
-                b: b,
-                e: e
-            };
-            console.log("OLD B: " + b);
-            b = e;
-            console.log("NEW B: " + b);
-            console.log("OLD E:" + e);
-            e = b + 10000;
-            console.log("NEW E: " + e);
-            if (b < 1000000000) {
-                io.sockets.emit('range', datan);
-                if (b % 10000 <= 10000) {
-                    checkmap();
+            if (data.m == true) {
+                var datan = {
+                    u: data.u,
+                    b: b,
+                    e: e
+                };
+                console.log("OLD B: " + b);
+                b = e;
+                console.log("NEW B: " + b);
+                console.log("OLD E:" + e);
+                e = b + 10000;
+                console.log("NEW E: " + e);
+                if (b < 1000000000) {
+                    io.sockets.emit('range', datan);
                 }
             }
 
         });
     }
 );
-
+setInterval(function() {
+    console.log("Checking Map");
+    checkmap();
+}, 60000);
 
 function prime(n) {
     var ogn = n;
@@ -147,7 +145,7 @@ function checkforcompmap() {
     // var small;
     var genlist = [];
     console.log("LARGEST KEY: " + e);
-    for (var i = 1; i <= e-20000; i++) {
+    for (var i = 1; i <= e; i++) {
         if (!(i in dict)) {
             // console.log(dict[i]);
             genlist.push(i);
@@ -158,7 +156,9 @@ function checkforcompmap() {
     console.log("Generating: " + genlist.length + " missed factors");
     for (var i = 1; i < genlist.length; i++) {
         dict[i] = prime(i);
+        // console.log(dict[i]);
     }
+    // return dict;
 }
 
 function checkmap() {
@@ -168,6 +168,9 @@ function checkmap() {
     // console.log(dict);
     console.log("CHECKING MAP");
     checkforcompmap();
+    for (var i = 0; i < genlist.length; i++) {
+        console.log(dict[genlist[i]]);
+    }
     for (var key in dict) {
         if (dict.hasOwnProperty(key)) {
             if (dict[key].length % 2 == 0) {
@@ -175,10 +178,10 @@ function checkmap() {
             } else {
                 odd++;
             }
-            if (key == 906150257) {
-                console.log("Winner");
-                process.exit();
-            }
+            // if (key == 906150257) {
+            //     console.log("Winner");
+            //     process.exit();
+            // }
             if (even > odd && key != 1) {
                 console.log("Winner");
                 process.exit();

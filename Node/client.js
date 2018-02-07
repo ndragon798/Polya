@@ -48,14 +48,20 @@ function prime(n) {
 
     return primfac;
 }
+var cont=true;
+
+function stopprime(){
+    cont=false;
+}
 var b;
 var e;
-var assocarray = {}
+var assocarray = {};
+
 console.log("test");
 socket.on('range',
     function(data) {
         console.log("RANGE");
-	document.getElementById("demo").innerHTML=data.b;
+	document.getElementById("demo").innerHTML=data.b+"-"+data.e;
         //document.write(data.b);
         console.log(data.b);
         console.log(data.e);
@@ -67,7 +73,8 @@ socket.on('range',
             }
             var data = {
                 u: uuid,
-                a: assocarray
+                a: assocarray,
+                m: cont
             };
             socket.emit('done', data);
         }
