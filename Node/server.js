@@ -8,15 +8,15 @@ var path = require('path');
 var fs = require('fs');
 
 var server = http.createServer(handleRequest);
-server.listen(8080);
+server.listen(7659);
 
-console.log('Server started on port 8080');
+console.log('Server started on port 7659');
 
 function handleRequest(req, res) {
     // What did we request?
     res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
     var pathname = req.url;
-    console.log(req.connection.remoteAddress);
+    // console.log(req.connection.remoteAddress);
     // If blank let's ask for index.html
     if (pathname == '/') {
         pathname = '/index.html';
@@ -54,7 +54,7 @@ function handleRequest(req, res) {
 }
 var dict = {};
 var b = 1;
-var e = 10001;
+var e = 1001;
 //var even = 0;
 //var odd = 0;
 // WebSocket Portion
@@ -84,12 +84,9 @@ io.sockets.on('connection',
                     b: b,
                     e: e
                 };
-                // console.log(datan.u);
-                // console.log(datan.b);
-                // console.log(datan.e);
-                b = e;
-                b++;
-                e = b + 10000;
+                // b = e;
+                // b++;
+                // e = b + 10000;
                 io.sockets.emit('range', datan);
             }
         );
@@ -102,42 +99,75 @@ io.sockets.on('connection',
                     dict[key] = data.a[key];
                 }
             }
-            // dict+=data.a;
-            // console.log(dict);
-            // console.log("EVEN: " + even);
-            // console.log("ODD: " + odd);
             var datan = {
                 u: data.u,
                 b: b,
                 e: e
             };
-            b = e+1;
+            console.log("OLD B: " + b);
+            b = e;
+            console.log("NEW B: " + b);
+            console.log("OLD E:" + e);
             e = b + 10000;
-            if (b < 1000000000 ) {
+            console.log("NEW E: " + e);
+            if (b < 1000000000) {
                 io.sockets.emit('range', datan);
-            } 
-            if(b%1000000==0) {
-                checkmap();
+                if (b % 10000 <= 10000) {
+                    checkmap();
+                }
             }
-        });
-        // socket.on('new',function(data){
-        //   socket.broadcast.emit('new',data);
-        // });
-        // socket.on('hit',function(data){
-        //   socket.broadcast.emit('hit',data);
-        // })
 
-        // socket.on('disconnect', function() {
-        //     console.log("Client has disconnected");
-        //     socket.broadcast.emit('exit');
-        // });
+        });
     }
 );
 
+
+function prime(n) {
+    var ogn = n;
+    // if (n % 1000 == 0) {
+    //     // console.log(n);
+    // }
+    var primfac = [];
+    var d = 2;
+    while (d * d <= n) {
+        while ((n % d) == 0) {
+            primfac.push(d);
+            Math.floor(n /= d);
+        }
+        d += 1;
+    }
+    if (n > 1) {
+        primfac.push(n);
+    }
+    return primfac;
+}
+
+function checkforcompmap() {
+    // var large;
+    // var small;
+    var genlist = [];
+    console.log("LARGEST KEY: " + e);
+    for (var i = 1; i <= e-20000; i++) {
+        if (!(i in dict)) {
+            // console.log(dict[i]);
+            genlist.push(i);
+        }
+    }
+    console.log(genlist[0]);
+    console.log(genlist[genlist.length - 1]);
+    console.log("Generating: " + genlist.length + " missed factors");
+    for (var i = 1; i < genlist.length; i++) {
+        dict[i] = prime(i);
+    }
+}
+
 function checkmap() {
-    var even=0;
-    var odd=0;
+    var even = 0;
+    var odd = 0;
+    var prev = 0;
+    // console.log(dict);
     console.log("CHECKING MAP");
+    checkforcompmap();
     for (var key in dict) {
         if (dict.hasOwnProperty(key)) {
             if (dict[key].length % 2 == 0) {

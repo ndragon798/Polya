@@ -27,9 +27,9 @@ function sendconnect(uuid) {
 
 function prime(n) {
     var ogn = n;
-    if (n % 1000 == 0) {
-        console.log(n);
-    }
+    // if (n % 1000 == 0) {
+    //     console.log(n);
+    // }
     var primfac = [];
     var d = 2;
     while (d * d <= n) {
@@ -57,8 +57,8 @@ socket.on('range',
         console.log("RANGE");
 	document.getElementById("demo").innerHTML=data.b;
         //document.write(data.b);
-        // console.log(data.b);
-        // console.log(data.e);
+        console.log(data.b);
+        console.log(data.e);
         e=data.e;
         b=data.b;
         if (data.u == uuid) {
