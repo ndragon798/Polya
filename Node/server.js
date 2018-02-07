@@ -96,20 +96,25 @@ io.sockets.on('connection',
                 }
             }
             if (data.m == true) {
-                var datan = {
-                    u: data.u,
-                    b: b,
-                    e: e
-                };
-                console.log("OLD B: " + b);
-                b = e;
-                console.log("NEW B: " + b);
-                console.log("OLD E:" + e);
-                e = b + 10000;
-                console.log("NEW E: " + e);
+
                 if (b < 1000000000) {
+                    var datan = {
+                        u: data.u,
+                        b: b,
+                        e: e
+                    };
+                    // console.log("OLD B: " + b);
+                    b = e;
+                    // console.log("NEW B: " + b);
+                    // console.log("OLD E: " + e);
+                    e = b + 10000;
+                    // console.log("NEW E: " + e);
                     io.sockets.emit('range', datan);
                 }
+            }else{
+                console.log(e);
+                e=e-10000;
+                console.log(e);
             }
 
         });
@@ -168,9 +173,6 @@ function checkmap() {
     // console.log(dict);
     console.log("CHECKING MAP");
     checkforcompmap();
-    for (var i = 0; i < genlist.length; i++) {
-        console.log(dict[genlist[i]]);
-    }
     for (var key in dict) {
         if (dict.hasOwnProperty(key)) {
             if (dict[key].length % 2 == 0) {
