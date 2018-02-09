@@ -55,12 +55,16 @@ function stopprime(){
 }
 var b;
 var e;
-var assocarray = {};
+var assocarray = new Map();
 
 console.log("test");
 socket.on('range',
     function(data) {
         console.log("RANGE");
+        console.log(typeof assocarray);
+        for (var [key, value] of assocarray) {
+            console.log(key + " "+value);
+        }
 	document.getElementById("demo").innerHTML=data.b+"-"+data.e;
         //document.write(data.b);
         console.log(data.b);
@@ -69,7 +73,7 @@ socket.on('range',
         b=data.b;
         if (data.u == uuid) {
             for (var i = data.b; i <= data.e; i++) {
-                assocarray[i] = prime(i);
+                assocarray.set(i,prime(i));
             }
             var data = {
                 u: uuid,

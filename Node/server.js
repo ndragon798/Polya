@@ -52,7 +52,7 @@ function handleRequest(req, res) {
         }
     );
 }
-var dict = {};
+var dict = new Map();
 var b = 1;
 var e = 1001;
 
@@ -89,12 +89,15 @@ io.sockets.on('connection',
         socket.on('done', function(data) {
             // console.log(data.u);
             // console.log(data.a);
-            for (var key in data.a) {
-                if (data.a.hasOwnProperty(key)) {
-                    // console.log(data.a[key]);
-                    dict[key] = data.a[key];
-                }
+            console.log(typeof data.a);
+            console.log(data.a)
+                // try{
+            for (var [key, value] of data.a) {
+                dict.set(key, value);
             }
+            // }}catch(error){
+            //     console.log(error); 
+            // }
             if (data.m == true) {
 
                 if (b < 1000000000) {
@@ -111,11 +114,11 @@ io.sockets.on('connection',
                     // console.log("NEW E: " + e);
                     io.sockets.emit('range', datan);
                 }
-            }else{
-                console.log(e);
-                e=e-10000;
-                console.log(e);
-            }
+            } //else{
+            //     // console.log(e);
+            //     // e=e-10000;
+            //     // console.log(e);
+            // }
 
         });
     }
@@ -123,7 +126,7 @@ io.sockets.on('connection',
 setInterval(function() {
     console.log("Checking Map");
     checkmap();
-}, 60000);
+}, 30000);
 
 function prime(n) {
     var ogn = n;
@@ -160,7 +163,8 @@ function checkforcompmap() {
     console.log(genlist[genlist.length - 1]);
     console.log("Generating: " + genlist.length + " missed factors");
     for (var i = 1; i < genlist.length; i++) {
-        dict[i] = prime(i);
+
+        dict.set(i, prime(i));
         // console.log(dict[i]);
     }
     // return dict;
@@ -173,21 +177,17 @@ function checkmap() {
     // console.log(dict);
     console.log("CHECKING MAP");
     checkforcompmap();
-    for (var key in dict) {
-        if (dict.hasOwnProperty(key)) {
-            if (dict[key].length % 2 == 0) {
-                even++;
-            } else {
-                odd++;
-            }
-            // if (key == 906150257) {
-            //     console.log("Winner");
-            //     process.exit();
-            // }
-            if (even > odd && key != 1) {
-                console.log("Winner");
-                process.exit();
-            }
+    for (var [key, value] of dict) {
+        // if (dict.hasOwnProperty(key)) {
+        if (dict.get(key).length % 2 == 0) {
+            even++;
+        } else {
+            odd++;
         }
+        if (even > odd && key != 1) {
+            console.log("Winner");
+            process.exit();
+        }
+        // }
     }
 }
