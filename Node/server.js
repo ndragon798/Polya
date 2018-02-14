@@ -141,7 +141,7 @@ function checkforcompmap() {
     for (var i = 1; i <= e; i++) {
         if (dict.get(i)==0) {
 
-            console.log(dict.get(i));
+            // console.log(dict.get(i));
             genlist.push(i);
         }
     }
