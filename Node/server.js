@@ -145,8 +145,8 @@ function checkforcompmap() {
             genlist.push(i);
         }
     }
-    console.log(genlist[0]);
-    console.log(genlist[genlist.length - 1]);
+    // console.log(genlist[0]);
+    // console.log(genlist[genlist.length - 1]);
     console.log("Generating: " + genlist.length + " missed factors");
     for (var i = 1; i < genlist.length; i++) {
 
