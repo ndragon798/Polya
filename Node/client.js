@@ -79,7 +79,7 @@ socket.on('range',
                 a: assocarray,
                 m: cont
             };
-            console.log(data.a);
+            // console.log(data.a);
             socket.emit('done', data);
         }
     });
