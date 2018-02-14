@@ -4,6 +4,10 @@ socket = io.connect();
 var e = 0;
 var o = 0;
 
+// var b;
+// var e;
+var assocarray=[];
+
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -42,44 +46,40 @@ function prime(n) {
     if (n > 1) {
         primfac.push(n);
     }
-    // if (primfac.length%2==0){
-
-    // }
-
     return primfac;
 }
-var cont=true;
+var cont = true;
 
-function stopprime(){
-    cont=false;
+function stopprime() {
+    cont = false;
 }
-var b;
-var e;
-var assocarray = new Map();
 
 console.log("test");
 socket.on('range',
     function(data) {
         console.log("RANGE");
-        console.log(typeof assocarray);
-        for (var [key, value] of assocarray) {
-            console.log(key + " "+value);
-        }
-	document.getElementById("demo").innerHTML=data.b+"-"+data.e;
+        // console.log(typeof assocarray);
+        // for (var [key, value] of assocarray) {
+        //     console.log(key + " " + value);
+        // }
+        document.getElementById("demo").innerHTML = data.b + "-" + data.e;
         //document.write(data.b);
         console.log(data.b);
         console.log(data.e);
-        e=data.e;
-        b=data.b;
+        // e = data.e;
+        // b = data.b;
         if (data.u == uuid) {
             for (var i = data.b; i <= data.e; i++) {
-                assocarray.set(i,prime(i));
+                assocarray.push(prime(i));
             }
             var data = {
+                b: data.b,
+                e: data.e,
                 u: uuid,
                 a: assocarray,
                 m: cont
             };
+            console.log(data.a);
             socket.emit('done', data);
         }
     });

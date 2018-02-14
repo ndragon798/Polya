@@ -16,7 +16,6 @@ function handleRequest(req, res) {
     // What did we request?
     res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
     var pathname = req.url;
-    // console.log(req.connection.remoteAddress);
     // If blank let's ask for index.html
     if (pathname == '/') {
         pathname = '/index.html';
@@ -52,13 +51,11 @@ function handleRequest(req, res) {
         }
     );
 }
-var dict = new Map();
+var dict=new Map();
 var b = 1;
 var e = 1001;
 
 var io = require('socket.io').listen(server);
-//io.set('origins', 'http://f355bce2.ngrok.io:*');
-//io.origins('*:*');
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
 io.sockets.on('connection',
@@ -80,24 +77,22 @@ io.sockets.on('connection',
                     b: b,
                     e: e
                 };
-                // b = e;
-                // b++;
-                // e = b + 10000;
                 io.sockets.emit('range', datan);
             }
         );
         socket.on('done', function(data) {
-            // console.log(data.u);
+            // console.log(typeof data.a);
             // console.log(data.a);
-            console.log(typeof data.a);
-            console.log(data.a)
-                // try{
-            for (var [key, value] of data.a) {
-                dict.set(key, value);
-            }
-            // }}catch(error){
-            //     console.log(error); 
+            // console.log(data);
+            // for (var [key, value] of data.a) {
+            //     dict.set(key, value);
             // }
+            console.log(data.b+" "+data.e);
+            // console.log(data.a);
+            for (var i = 0; i < data.a.length; i++) {
+                dict.set(data.b+i,data.a[i]);
+            }
+            // console.log(dict);
             if (data.m == true) {
 
                 if (b < 1000000000) {
@@ -106,23 +101,16 @@ io.sockets.on('connection',
                         b: b,
                         e: e
                     };
-                    // console.log("OLD B: " + b);
                     b = e;
-                    // console.log("NEW B: " + b);
-                    // console.log("OLD E: " + e);
                     e = b + 10000;
-                    // console.log("NEW E: " + e);
                     io.sockets.emit('range', datan);
                 }
-            } //else{
-            //     // console.log(e);
-            //     // e=e-10000;
-            //     // console.log(e);
-            // }
-
+            }
         });
+
     }
 );
+
 setInterval(function() {
     console.log("Checking Map");
     checkmap();
@@ -130,9 +118,6 @@ setInterval(function() {
 
 function prime(n) {
     var ogn = n;
-    // if (n % 1000 == 0) {
-    //     // console.log(n);
-    // }
     var primfac = [];
     var d = 2;
     while (d * d <= n) {
@@ -154,8 +139,9 @@ function checkforcompmap() {
     var genlist = [];
     console.log("LARGEST KEY: " + e);
     for (var i = 1; i <= e; i++) {
-        if (!(i in dict)) {
-            // console.log(dict[i]);
+        if (dict.get(i)==0) {
+
+            console.log(dict.get(i));
             genlist.push(i);
         }
     }
@@ -178,8 +164,7 @@ function checkmap() {
     console.log("CHECKING MAP");
     checkforcompmap();
     for (var [key, value] of dict) {
-        // if (dict.hasOwnProperty(key)) {
-        if (dict.get(key).length % 2 == 0) {
+        if (value.length % 2 == 0 || key ==1) {
             even++;
         } else {
             odd++;
@@ -188,6 +173,5 @@ function checkmap() {
             console.log("Winner");
             process.exit();
         }
-        // }
     }
 }
